@@ -5,13 +5,20 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import Myfor from './components/for.jsx'
 import Father from './components/father.jsx'
+import { BrowserRouter , Route, Link, Switch } from 'react-router-dom'
 // 引入自定义的hello.jsx
 // var text = require('./hello.jsx');
-
 // 编写一个简单的组件
 class App extends React.Component {
   render() {
-    return <h1>123</h1>
+    return (
+      <div>
+        <Link to="/about">About</Link>
+        <Link to="/home">Home</Link>
+        <p>123</p>
+        {this.props.children}
+      </div>
+    )
   }
 }
 class MyApp extends React.Component {
@@ -32,6 +39,46 @@ let MyDIV = (
     <MyApp name="xyz" />
   </div>
 )
+class ShowRouter extends React.Component{
+  constructor(props){
+    super(props)
+  }
+  render(){
+    return(
+      <div>
+        <Link to="/about">About</Link>
+        <Link to="/home">Home</Link>
+        <p>123</p>
+        {this.props.children}
+      </div>
+    )
+  }
+}
+
+class About extends React.Component{
+  constructor(props){
+    super(props)
+  }
+  render(){
+    return(
+      <div>
+        I'M ABOUT!
+      </div>
+    )
+  }
+}
+class Home extends React.Component{
+  constructor(props){
+    super(props)
+  }
+  render(){
+    return(
+      <div>
+        I'M Home!
+      </div>
+    )
+  }
+}
 class Time extends React.Component {
   constructor(props) {
     super(props)
@@ -74,6 +121,13 @@ class Time extends React.Component {
         <Myfor arr={[1, 2, 3]} />
         {/* <Myfor /> */}
         <Father />
+        <BrowserRouter>
+        <ShowRouter>
+
+          <Route path="/home" component={Home} />
+          <Route path="/about" component={About} />
+        </ShowRouter>
+        </BrowserRouter>
       </div>
     )
   }
