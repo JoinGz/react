@@ -81,6 +81,7 @@ module.exports = {
     port: 9000,
     open: true,
     index: 'index.html',
-    inline: true
+    inline: true,
+    historyApiFallback:true // 未的是router不要history模式且可以跳转
   }
 }

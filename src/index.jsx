@@ -5,7 +5,47 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import Myfor from './components/for.jsx'
 import Father from './components/father.jsx'
-import { BrowserRouter , Route, Link, Switch } from 'react-router-dom'
+import { BrowserRouter, Route, Link, Switch, Redirect } from 'react-router-dom'
+// import { connect } from 'react-redux'
+// import todoApp from './state/reducers'
+// let appState = {
+//   title: {
+//     text: 'this is title',
+//     color: 'red',
+//   },
+//   content: {
+//     text: 'this is content',
+//     color: 'blue'
+//   }
+// }
+// let store = connect(appState)
+// const addTodo = text => ({
+//   type: 'ADD_TODO',
+//   text
+// })
+// function todoApp(state, action) {
+//   // if (typeof state === 'undefined') {
+//   //   return initialState
+//   // }
+//   // 这里暂不处理任何 action，
+//   // 仅返回传入的 state。
+//   return state
+// }
+// // 打印初始状态
+// console.log(store.getState())
+
+// // 每次 state 更新时，打印日志
+// // 注意 subscribe() 返回一个函数用来注销监听器
+// const unsubscribe = store.subscribe(() =>
+//   console.log(store.getState())
+// )
+
+// // 发起一系列 action
+// store.dispatch(addTodo('Learn about actions'))
+
+
+// 停止监听 state 更新
+// unsubscribe();
 // 引入自定义的hello.jsx
 // var text = require('./hello.jsx');
 // 编写一个简单的组件
@@ -39,42 +79,80 @@ let MyDIV = (
     <MyApp name="xyz" />
   </div>
 )
-class ShowRouter extends React.Component{
-  constructor(props){
+class ShowRouter extends React.Component {
+  constructor(props) {
     super(props)
   }
-  render(){
-    return(
+  click = () => {}
+  render() {
+    return (
       <div>
         <Link to="/about">About</Link>
         <Link to="/home">Home</Link>
-        <p>123</p>
+        <p onClick={this.click}>123</p>
         {this.props.children}
       </div>
     )
   }
 }
 
-class About extends React.Component{
-  constructor(props){
+class About extends React.Component {
+  constructor(props) {
     super(props)
   }
-  render(){
-    return(
+  componentDidMount() {
+    // console.log(this.props.location.query.name);
+    // console.log(this.props.history.push('/'))
+  }
+  click = () => {
+    // 编程式
+    this.props.history.push('/about/2')
+  }
+  render() {
+    return (
       <div>
-        I'M ABOUT!
+        <div>I'M ABOUT!</div>
+        <p>下面就是传说中的Router啦</p>
+        <Link to="/">点我回首页</Link>
+        {/* 子路由 */}
+        {/* 声明式 */}
+        <Link to="/about/1">点我显示子路由</Link>
+        <p onClick={this.click}>点我显示</p>
+        <Route
+          path="1"
+          render={() => <h1>弗雷尔卓德必将再次统一！</h1>}
+        />
+        <Route
+          path="/about/2"
+          render={() => <h1>犯我德邦者，顺丰快递！</h1>}
+        />
+        <Route path="/about" exact render={() => <h1>快乐风男不快乐！</h1>} />
       </div>
     )
   }
 }
-class Home extends React.Component{
-  constructor(props){
+class Home extends React.Component {
+  constructor(props) {
     super(props)
   }
-  render(){
-    return(
+  click = () => {
+    // this.props.history.push('/about')
+    this.props.history.push({
+      pathname: '/about',
+      query: {
+        name: 'inbox'
+      }
+    })
+  }
+  componentDidMount() {
+    console.log(this.props.match.params.id)
+  }
+  render() {
+    let match = this.props.match.params
+    return (
       <div>
-        I'M Home!
+        <div onClick={this.click}>I'M Home!</div>
+        <p>{match.id}</p>
       </div>
     )
   }
@@ -121,17 +199,36 @@ class Time extends React.Component {
         <Myfor arr={[1, 2, 3]} />
         {/* <Myfor /> */}
         <Father />
-        <BrowserRouter>
-        <ShowRouter>
+      {/* <Link to="/about">About</Link> */}
 
-          <Route path="/home" component={Home} />
-          <Route path="/about" component={About} />
-        </ShowRouter>
-        </BrowserRouter>
       </div>
     )
   }
 }
 
 // 创建一个组件实例，将组件挂载到文档结构中
-ReactDOM.render(<Time />, document.querySelector('#app'))
+ReactDOM.render(
+  <BrowserRouter>
+    {/* <ShowRouter> */}
+    <div>
+      {/*多个子节点要用div包裹*/}
+      <p>我是路由</p>
+      <Time /> {/*可以把其他组件放进来*/}
+      <Link to="/about">About</Link>
+      <Link to="/home/5">Home</Link>
+      <Switch> {/*exact实现精确匹配（匹配到第一个就不往下继续匹配）*/}
+        <Route
+          exact
+          path="/"
+          render={() => {
+            return <Redirect to="/home/1" />
+          }}
+        />
+        <Route path="/home/:id" component={Home} />
+        <Route path="/about" component={About} />
+      </Switch>
+    </div>
+    {/* </ShowRouter> */}
+  </BrowserRouter>,
+  document.querySelector('#app')
+)
