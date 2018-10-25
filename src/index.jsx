@@ -1,50 +1,67 @@
 // index.jsx
 // 引入react和react-dom模块
 // 使用ES2015模块导入语法
-import React from 'react';
-import ReactDOM from 'react-dom';
-import Myfor from './components/for.jsx';
-import Father from './components/father.jsx';
-import { BrowserRouter, Route, Link, Switch, Redirect } from 'react-router-dom';
-import { createStore } from 'redux';
+import React from 'react'
+import ReactDOM from 'react-dom'
+import Myfor from './components/for.jsx'
+import Father from './components/father.jsx'
+import { BrowserRouter, Route, Link, Switch, Redirect } from 'react-router-dom'
+import { createStore } from 'redux'
+import { addCounter } from './state/action.jsx'
+import { Provider, connect } from 'react-redux'
 // import todoApp from './state/reducers'
 
 //action
 const changeTextAction = {
   type: 'CHANGE_TEXT'
-};
+}
 const buttonClickAction = {
   type: 'BUTTON_CLICK'
-};
+}
 const buttonClickAction1 = {
   type: 'BUTTON_CLICK1'
-};
-
+}
 //reducer
 const initialState = {
-  text: 'Hello PandaKill'
-};
+  text: 'Hello PandaKill',
+  two: 1
+}
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case 'CHANGE_TEXT':
+      // if (action.text) {
+      // text = action.text
+      // } else {
+      let text
+      text = state.text == 'Hello' ? 'world' : 'Hello'
+      // }
       return {
-        text: state.text == 'Hello' ? 'world' : 'Hello'
-      };
+        text: text
+      }
     case 'BUTTON_CLICK':
       return {
         text: 'Hello world'
-      };
+      }
+    case 'myaddCounter':
+      let text2
+      if (action.id === 1) {
+        state.two = 3
+      } else {
+        text2 = state
+      }
+      return {
+        text2
+      }
     default:
-      return initialState;
+      return initialState
   }
-};
+}
 
 //store
-let store = createStore(reducer);
-console.log(store.getState());
-store.dispatch(buttonClickAction)
-console.log(store.getState());
-
+let store = createStore(reducer)
+// console.log(store.getState())
+// store.dispatch(addCounter(1))
+// console.log(store.getState())
 
 // 引入自定义的hello.jsx
 // var text = require('./hello.jsx');
@@ -58,7 +75,7 @@ class App extends React.Component {
         <p>123</p>
         {this.props.children}
       </div>
-    );
+    )
   }
 }
 class MyApp extends React.Component {
@@ -68,7 +85,7 @@ class MyApp extends React.Component {
         Hi,
         {this.props.name}
       </h1>
-    );
+    )
   }
 }
 let MyDIV = (
@@ -78,12 +95,12 @@ let MyDIV = (
     <p>who's my body</p>
     <MyApp name="xyz" />
   </div>
-);
+)
 class ShowRouter extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
   }
-  click = () => {};
+  click = () => {}
   render() {
     return (
       <div>
@@ -92,13 +109,13 @@ class ShowRouter extends React.Component {
         <p onClick={this.click}>123</p>
         {this.props.children}
       </div>
-    );
+    )
   }
 }
 
 class About extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
   }
   componentDidMount() {
     // console.log(this.props.location.query.name);
@@ -106,9 +123,10 @@ class About extends React.Component {
   }
   click = () => {
     // 编程式
-    this.props.history.push('/about/2');
-  };
+    this.props.history.push('/about/2')
+  }
   render() {
+    // console.log(this.props.match);
     return (
       <div>
         <div>I'M ABOUT!</div>
@@ -118,16 +136,20 @@ class About extends React.Component {
         {/* 声明式 */}
         <Link to="/about/1">点我显示子路由</Link>
         <p onClick={this.click}>点我显示</p>
-        <Route path="1" render={() => <h1>弗雷尔卓德必将再次统一！</h1>} />
+        <Route path="/" render={() => <h1>快乐风男不快乐！</h1>} />
+        <Route
+          path={`${this.props.match.path}/1`}
+          render={() => <h1>弗雷尔安卓</h1>}
+        />
         <Route path="/about/2" render={() => <h1>犯我德邦者，顺丰快递！</h1>} />
         <Route path="/about" exact render={() => <h1>快乐风男不快乐！</h1>} />
       </div>
-    );
+    )
   }
 }
 class Home extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
   }
   click = () => {
     // this.props.history.push('/about')
@@ -136,52 +158,53 @@ class Home extends React.Component {
       query: {
         name: 'inbox'
       }
-    });
-  };
+    })
+  }
   componentDidMount() {
-    console.log(this.props.match.params.id);
+    console.log(this.props.match.params.id)
   }
   render() {
-    let match = this.props.match.params;
+    let match = this.props.match.params
     return (
       <div>
         <div onClick={this.click}>I'M Home!</div>
         <p>{match.id}</p>
       </div>
-    );
+    )
   }
 }
 class Time extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       date: 1,
       show: false
-    };
+    }
   }
   componentDidMount() {
     // this.timerID = setInterval(() => {
     //   this.upload()
     // }, 1000)
+    console.log(this.props)
   }
   upload() {
-    let x = this.state.date;
-    x++;
+    let x = this.state.date
+    x++
     this.setState({
       date: x
-    });
+    })
   }
   myclick() {
     // 绑定this
     // console.log('遭CLICK了')
     // console.log(this)
-    this.upload();
+    this.upload()
     this.setState({
       show: !this.state.show
-    });
+    })
   }
   render() {
-    let show = this.state.show;
+    let show = this.state.show
     return (
       <div>
         <h1 onClick={this.myclick.bind(this)}>
@@ -195,35 +218,64 @@ class Time extends React.Component {
         <Father />
         {/* <Link to="/about">About</Link> */}
       </div>
-    );
+    )
   }
 }
 
+//映射Redux state到组件的属性
+function mapStateToProps(state) {
+  return { text: state.text, id: state.id, two: state.two }
+}
+
+//映射Redux actions到组件的属性
+function mapDispatchToProps(dispatch) {
+  return {
+    onChange: obj => dispatch(addCounter(obj))
+  }
+}
+class Lop extends React.Component {
+  render() {
+    console.log(this.props)
+    // const {text, onChangeText, onButtonClick} = this.props;
+    const {onChange,text} = this.props;
+    return (
+      <BrowserRouter>
+        {/* <ShowRouter> */}
+        <div>
+          {/*多个子节点要用div包裹*/}
+          <p onClick={onChange}>我是路由 {text} </p>
+          <Time /> {/*可以把其他组件放进来*/}
+          <Link to="/about">About</Link>
+          <Link to="/home/5">Home</Link>
+          <Switch>
+            {' '}
+            {/*exact实现精确匹配（匹配到第一个就不往下继续匹配）*/}
+            <Route
+              exact
+              path="/"
+              render={() => {
+                return <Redirect to="/home/1" />
+              }}
+            />
+            <Route path="/home/:id" component={Home} />
+            <Route path="/about" component={About} />
+          </Switch>
+        </div>
+        {/* </ShowRouter> */}
+      </BrowserRouter>
+    )
+  }
+}
+//连接组件
+let App2 = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Lop)
+
 // 创建一个组件实例，将组件挂载到文档结构中
 ReactDOM.render(
-  <BrowserRouter>
-    {/* <ShowRouter> */}
-    <div>
-      {/*多个子节点要用div包裹*/}
-      <p>我是路由</p>
-      <Time /> {/*可以把其他组件放进来*/}
-      <Link to="/about">About</Link>
-      <Link to="/home/5">Home</Link>
-      <Switch>
-        {' '}
-        {/*exact实现精确匹配（匹配到第一个就不往下继续匹配）*/}
-        <Route
-          exact
-          path="/"
-          render={() => {
-            return <Redirect to="/home/1" />;
-          }}
-        />
-        <Route path="/home/:id" component={Home} />
-        <Route path="/about" component={About} />
-      </Switch>
-    </div>
-    {/* </ShowRouter> */}
-  </BrowserRouter>,
+  <Provider store={store}>
+    <App2 />
+  </Provider>,
   document.querySelector('#app')
-);
+)

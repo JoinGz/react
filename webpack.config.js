@@ -5,7 +5,8 @@ module.exports = {
   entry: './src/index.jsx', //入口文件
   output: {
     filename: 'my.js', //输出文件名
-    path: path.resolve(__dirname, 'dist') //输出路径
+    path: path.resolve(__dirname, 'dist'), //输出路径
+    publicPath: '/'
   },
   module: {
     loaders: [
