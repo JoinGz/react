@@ -6,59 +6,13 @@ import ReactDOM from 'react-dom'
 import Myfor from './components/for.jsx'
 import Father from './components/father.jsx'
 import { BrowserRouter, Route, Link, Switch, Redirect } from 'react-router-dom'
-import { createStore } from 'redux'
-import { addCounter } from './state/action.jsx'
 import { Provider, connect } from 'react-redux'
 // import todoApp from './state/reducers'
-
 //action
-const changeTextAction = {
-  type: 'CHANGE_TEXT'
-}
-const buttonClickAction = {
-  type: 'BUTTON_CLICK'
-}
-const buttonClickAction1 = {
-  type: 'BUTTON_CLICK1'
-}
-//reducer
-const initialState = {
-  text: 'Hello PandaKill',
-  two: 1
-}
-const reducer = (state = initialState, action) => {
-  switch (action.type) {
-    case 'CHANGE_TEXT':
-      // if (action.text) {
-      // text = action.text
-      // } else {
-      let text
-      text = state.text == 'Hello' ? 'world' : 'Hello'
-      // }
-      return {
-        text: text
-      }
-    case 'BUTTON_CLICK':
-      return {
-        text: 'Hello world'
-      }
-    case 'myaddCounter':
-      let text2
-      if (action.id === 1) {
-        state.two = 3
-      } else {
-        text2 = state
-      }
-      return {
-        text2
-      }
-    default:
-      return initialState
-  }
-}
+import { addCounter } from './state/action.jsx'
+// store
+import store from './state/store'
 
-//store
-let store = createStore(reducer)
 // console.log(store.getState())
 // store.dispatch(addCounter(1))
 // console.log(store.getState())
@@ -178,14 +132,20 @@ class Time extends React.Component {
     super(props)
     this.state = {
       date: 1,
-      show: false
+      show: false,
+      num: {}
     }
   }
   componentDidMount() {
     // this.timerID = setInterval(() => {
     //   this.upload()
     // }, 1000)
-    console.log(this.props)
+
+    store.subscribe(() => {
+      this.setState({
+        num: store.getState()
+      })
+    })
   }
   upload() {
     let x = this.state.date
@@ -203,6 +163,11 @@ class Time extends React.Component {
       show: !this.state.show
     })
   }
+  change = () => {
+    store.dispatch({
+      type: 'SUB'
+    })
+  }
   render() {
     let show = this.state.show
     return (
@@ -211,6 +176,11 @@ class Time extends React.Component {
           显示时间是：
           {this.state.date.toLocaleString()}
         </h1>
+        <h3 onClick={this.change}>change</h3>
+        <p>
+          能不能更改ReduX:
+          {this.state.num.num}
+        </p>
         {this.state.show ? <div>show</div> : ''}
         <p className={this.state.show ? 'x' : ''} />
         <Myfor arr={[1, 2, 3]} />
@@ -224,7 +194,7 @@ class Time extends React.Component {
 
 //映射Redux state到组件的属性
 function mapStateToProps(state) {
-  return { text: state.text, id: state.id, two: state.two }
+  return { num: state }
 }
 
 //映射Redux actions到组件的属性
@@ -234,16 +204,25 @@ function mapDispatchToProps(dispatch) {
   }
 }
 class Lop extends React.Component {
+  push = () => {
+    this.props.onChange(1)
+  }
   render() {
-    console.log(this.props)
+    // console.log(this.props)
+    // console.log(this.context)
     // const {text, onChangeText, onButtonClick} = this.props;
-    const {onChange,text} = this.props;
+    // const {onIncrement,num,Increment} = this.props;
+    const { onChange, num } = this.props
     return (
       <BrowserRouter>
         {/* <ShowRouter> */}
         <div>
           {/*多个子节点要用div包裹*/}
-          <p onClick={onChange}>我是路由 {text} </p>
+          {/* <p onClick={onIncrement} >我是路由  </p> */}
+          {/* <p onClick={Increment}>我是路由 {num} </p> */}
+          <p onClick={this.push}>
+            react-redux {num.num} {num.user.name}
+          </p>
           <Time /> {/*可以把其他组件放进来*/}
           <Link to="/about">About</Link>
           <Link to="/home/5">Home</Link>
@@ -275,6 +254,7 @@ let App2 = connect(
 // 创建一个组件实例，将组件挂载到文档结构中
 ReactDOM.render(
   <Provider store={store}>
+    {/* <App2 value={store.getState()} onIncrement={() => store.dispatch({type: 'ADD'})} Increment={() => store.dispatch({type: 'SUB'})}/> */}
     <App2 />
   </Provider>,
   document.querySelector('#app')

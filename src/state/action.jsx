@@ -1,4 +1,8 @@
 export const addCounter = id => ({
-  type: 'myaddCounter',
+  type: 'ADD',
+  id: id
+})
+export const subCounter = id => ({
+  type: 'SUB',
   id: id
 })
