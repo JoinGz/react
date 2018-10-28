@@ -1,18 +1,19 @@
 // index.jsx
 // 引入react和react-dom模块
 // 使用ES2015模块导入语法
-import React from 'react'
-import ReactDOM from 'react-dom'
-import Myfor from './components/for.jsx'
-import Father from './components/father.jsx'
-import { BrowserRouter, Route, Link, Switch, Redirect } from 'react-router-dom'
-import { Provider, connect } from 'react-redux'
+import React from 'react';
+import ReactDOM from 'react-dom';
+import Myfor from './components/for.jsx';
+import Father from './components/father.jsx';
+import { BrowserRouter, Route, Link, Switch, Redirect } from 'react-router-dom';
+import { Provider, connect } from 'react-redux';
 // import todoApp from './state/reducers'
 //action
-import { addCounter } from './state/action.jsx'
+import { addCounter } from './state/action.jsx';
 // store
-import store from './state/store'
-
+import store from './state/store';
+import { Button, Select } from 'element-react';
+import 'element-theme-default';
 // console.log(store.getState())
 // store.dispatch(addCounter(1))
 // console.log(store.getState())
@@ -29,7 +30,7 @@ class App extends React.Component {
         <p>123</p>
         {this.props.children}
       </div>
-    )
+    );
   }
 }
 class MyApp extends React.Component {
@@ -39,7 +40,7 @@ class MyApp extends React.Component {
         Hi,
         {this.props.name}
       </h1>
-    )
+    );
   }
 }
 let MyDIV = (
@@ -49,12 +50,12 @@ let MyDIV = (
     <p>who's my body</p>
     <MyApp name="xyz" />
   </div>
-)
+);
 class ShowRouter extends React.Component {
   constructor(props) {
-    super(props)
+    super(props);
   }
-  click = () => {}
+  click = () => {};
   render() {
     return (
       <div>
@@ -63,13 +64,13 @@ class ShowRouter extends React.Component {
         <p onClick={this.click}>123</p>
         {this.props.children}
       </div>
-    )
+    );
   }
 }
 
 class About extends React.Component {
   constructor(props) {
-    super(props)
+    super(props);
   }
   componentDidMount() {
     // console.log(this.props.location.query.name);
@@ -77,8 +78,8 @@ class About extends React.Component {
   }
   click = () => {
     // 编程式
-    this.props.history.push('/about/2')
-  }
+    this.props.history.push('/about/2');
+  };
   render() {
     // console.log(this.props.match);
     return (
@@ -98,12 +99,12 @@ class About extends React.Component {
         <Route path="/about/2" render={() => <h1>犯我德邦者，顺丰快递！</h1>} />
         <Route path="/about" exact render={() => <h1>快乐风男不快乐！</h1>} />
       </div>
-    )
+    );
   }
 }
 class Home extends React.Component {
   constructor(props) {
-    super(props)
+    super(props);
   }
   click = () => {
     // this.props.history.push('/about')
@@ -112,29 +113,37 @@ class Home extends React.Component {
       query: {
         name: 'inbox'
       }
-    })
-  }
+    });
+  };
   componentDidMount() {
-    console.log(this.props.match.params.id)
+    console.log(this.props.match.params.id);
   }
   render() {
-    let match = this.props.match.params
+    let match = this.props.match.params;
     return (
       <div>
         <div onClick={this.click}>I'M Home!</div>
         <p>{match.id}</p>
       </div>
-    )
+    );
   }
 }
 class Time extends React.Component {
   constructor(props) {
-    super(props)
+    super(props);
     this.state = {
       date: 1,
       show: false,
-      num: {}
-    }
+      num: {},
+      options: [{
+        value: '选项1',
+        label: '黄金糕'
+      }, {
+        value: '选项2',
+        label: '双皮奶'
+      }],
+      value: '123'
+    };
   }
   componentDidMount() {
     // this.timerID = setInterval(() => {
@@ -144,34 +153,43 @@ class Time extends React.Component {
     store.subscribe(() => {
       this.setState({
         num: store.getState()
-      })
-    })
+      });
+    });
   }
   upload() {
-    let x = this.state.date
-    x++
+    let x = this.state.date;
+    x++;
     this.setState({
-      date: x
-    })
+      date: x,
+
+    });
   }
   myclick() {
     // 绑定this
     // console.log('遭CLICK了')
     // console.log(this)
-    this.upload()
+    this.upload();
     this.setState({
       show: !this.state.show
-    })
+    });
   }
   change = () => {
     store.dispatch({
       type: 'SUB'
-    })
-  }
+    });
+  };
   render() {
-    let show = this.state.show
+    let show = this.state.show;
     return (
       <div>
+        <Select value={this.state.value} placeholder="请选择">
+          {this.state.options.map(el => {
+            return (
+              <Select.Option key={el.value} label={el.label} value={el.value} />
+            );
+          })}
+        </Select>
+        w shi balue{this.state.value}
         <h1 onClick={this.myclick.bind(this)}>
           显示时间是：
           {this.state.date.toLocaleString()}
@@ -188,31 +206,31 @@ class Time extends React.Component {
         <Father />
         {/* <Link to="/about">About</Link> */}
       </div>
-    )
+    );
   }
 }
 
 //映射Redux state到组件的属性
 function mapStateToProps(state) {
-  return { num: state }
+  return { num: state };
 }
 
 //映射Redux actions到组件的属性
 function mapDispatchToProps(dispatch) {
   return {
     onChange: obj => dispatch(addCounter(obj))
-  }
+  };
 }
 class Lop extends React.Component {
   push = () => {
-    this.props.onChange(1)
-  }
+    this.props.onChange(1);
+  };
   render() {
     // console.log(this.props)
     // console.log(this.context)
     // const {text, onChangeText, onButtonClick} = this.props;
     // const {onIncrement,num,Increment} = this.props;
-    const { onChange, num } = this.props
+    const { onChange, num } = this.props;
     return (
       <BrowserRouter>
         {/* <ShowRouter> */}
@@ -226,14 +244,15 @@ class Lop extends React.Component {
           <Time /> {/*可以把其他组件放进来*/}
           <Link to="/about">About</Link>
           <Link to="/home/5">Home</Link>
+          <Button>Button</Button>
           <Switch>
-            {' '}
+            {/* {' '} */}
             {/*exact实现精确匹配（匹配到第一个就不往下继续匹配）*/}
             <Route
               exact
               path="/"
               render={() => {
-                return <Redirect to="/home/1" />
+                return <Redirect to="/home/1" />;
               }}
             />
             <Route path="/home/:id" component={Home} />
@@ -242,14 +261,14 @@ class Lop extends React.Component {
         </div>
         {/* </ShowRouter> */}
       </BrowserRouter>
-    )
+    );
   }
 }
 //连接组件
 let App2 = connect(
   mapStateToProps,
   mapDispatchToProps
-)(Lop)
+)(Lop);
 
 // 创建一个组件实例，将组件挂载到文档结构中
 ReactDOM.render(
@@ -258,4 +277,4 @@ ReactDOM.render(
     <App2 />
   </Provider>,
   document.querySelector('#app')
-)
+);

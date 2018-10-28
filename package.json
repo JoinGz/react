@@ -5,6 +5,8 @@
   "main": "webpack.config.js",
   "dependencies": {
     "babel-preset-react": "^6.24.1",
+    "element-react": "^1.4.24",
+    "element-theme-default": "^1.4.13",
     "react": "^16.5.2",
     "react-dom": "^16.5.2",
     "react-redux": "^5.0.7",
